@@ -4,9 +4,10 @@ import apiClient from '../../api/client';
 
 export default function Login() {
   const navigate = useNavigate();
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  // CAMBIO 1: Cambiamos 'email' por 'username'
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // Estado para mejorar la experiencia de usuario (UX)
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -17,6 +18,7 @@ export default function Login() {
     setIsLoading(true);
     setError('');
     try {
+      // Ahora credentials tiene la forma { username: "...", password: "..." }
       const response = await apiClient.post('/auth/login/', credentials);
       
       localStorage.setItem('access_token', response.data.access);
@@ -24,7 +26,7 @@ export default function Login() {
       
       navigate('/'); 
     } catch (err) {
-      setError('Credenciales incorrectas. Verifica tu correo y contraseña.');
+      setError('Credenciales incorrectas. Verifica tu usuario y contraseña.');
     } finally {
       setIsLoading(false);
     }
@@ -32,9 +34,8 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex font-sans text-gray-900 bg-white">
-      {/* Sección Izquierda: Imagen Editorial (Se oculta en celulares) */}
+      {/* Sección Izquierda: Imagen Editorial */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gray-900">
-        {/* Puedes cambiar esta URL por alguna buena fotografía que hayas tomado tú mismo para darle un toque único */}
         <img 
           src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" 
           alt="Armario de moda" 
@@ -55,7 +56,6 @@ export default function Login() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 xl:p-24">
         <div className="w-full max-w-md space-y-8">
           
-          {/* Cabecera */}
           <div className="text-center lg:text-left">
             <h2 className="text-4xl font-extrabold tracking-tight text-gray-900 mb-2">
               Bienvenido
@@ -65,7 +65,6 @@ export default function Login() {
             </p>
           </div>
 
-          {/* Formulario */}
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md animate-pulse">
@@ -74,16 +73,17 @@ export default function Login() {
             )}
             
             <div className="space-y-5">
+              {/* CAMBIO 2 y 3: Modificamos el input para pedir el Usuario */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5" htmlFor="email">
-                  Correo Electrónico
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5" htmlFor="username">
+                  Nombre de Usuario
                 </label>
                 <input 
-                  id="email"
-                  name="email" 
-                  type="email" 
+                  id="username"
+                  name="username" 
+                  type="text" 
                   required 
-                  placeholder="ejemplo@correo.com" 
+                  placeholder="Tu usuario" 
                   className="w-full px-4 py-3.5 rounded-xl border border-gray-300 bg-gray-50 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200"
                   onChange={handleChange} 
                 />
@@ -128,7 +128,6 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Footer del Formulario */}
           <div className="text-center mt-8">
             <p className="text-gray-500 text-sm">
               ¿No tienes una cuenta?{' '}

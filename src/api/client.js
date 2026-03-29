@@ -1,8 +1,12 @@
 import axios from 'axios';
 
-// Creamos una instancia de Axios apuntando a tu Django
+// 1. Leemos la variable de entorno de Vite.
+// Si no la encuentra, usa localhost como "salvavidas" para que nada se rompa.
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+
+// 2. Creamos la instancia de Axios apuntando dinámicamente
 const apiClient = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/',
+  baseURL: `${API_BASE_URL}/api/`, // <-- Aquí inyectamos la variable
   headers: {
     'Content-Type': 'application/json',
   },
